@@ -22,6 +22,10 @@ public class Human implements Parcelable {
         age = in.readString();
     }
 
+    public static Human saveHuman(String name, String surname, String age){
+        return new Human(name, surname, age);
+    }
+
     public static final Creator<Human> CREATOR = new Creator<Human>() {
         @Override
         public Human createFromParcel(Parcel in) {
