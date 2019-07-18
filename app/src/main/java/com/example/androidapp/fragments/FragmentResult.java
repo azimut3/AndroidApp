@@ -1,6 +1,7 @@
 package com.example.androidapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +17,23 @@ public class FragmentResult extends Fragment {
     private EditText resultField;
     private String resultFieldText;
     private Button submitBtn;
+    FrgmntMngr frgmntMngr;
 
     public FragmentResult() {
+        this.frgmntMngr = FrgmntMngr.getManager();
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("FragmentResult", "onCreate()");
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         resultField = view.findViewById(R.id.resultField);
         if (resultFieldText != null) resultField.setText(resultFieldText);
@@ -47,5 +52,9 @@ public class FragmentResult extends Fragment {
 
     public Button getSubmitBtn() {
         return submitBtn;
+    }
+
+    public EditText getResultField() {
+        return resultField;
     }
 }

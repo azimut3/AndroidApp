@@ -1,6 +1,7 @@
 package com.example.androidapp.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,10 @@ public class FragmentInput extends Fragment {
     EditText ageField;
     EditText surnameField;
     Button submitBtn;
+    FrgmntMngr frgmntMngr;
 
     public FragmentInput() {
+        this.frgmntMngr = FrgmntMngr.getManager();
     }
 
     @Override
@@ -53,7 +56,16 @@ public class FragmentInput extends Fragment {
             //Intent humanSubmitIntent = new Intent(this, HumanActivity.class);
             //humanSubmitIntent.putExtra("human", human);
             //startActivity(humanSubmitIntent);
-            resultFrmnt.setResultFieldText(human.toString());
+            Log.d("FragmentInput", "Result button pressed");
+            if (resultFrmnt.getResultField() == null) {
+                resultFrmnt.setResultFieldText(human.toString());
+            }
+            else {
+                resultFrmnt.getResultField().setText(human.toString());
+                Log.d("FragmentInput", "Now field in Result fragment says: "
+                        + resultFrmnt.getSubmitBtn().getText());
+            }
+
         }
 
 

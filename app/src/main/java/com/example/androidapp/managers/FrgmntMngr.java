@@ -1,5 +1,7 @@
 package com.example.androidapp.managers;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -30,9 +32,13 @@ public class FrgmntMngr {
     }
 
     public void addFragment(Fragment fragment) {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.fragment_container, fragment);
-        transaction.commit();
+        Log.wtf("WTF", "Add method " + MainActivity.isInLandscapeMode());
+        if (MainActivity.isInLandscapeMode() != true) {
+            Log.wtf("WTF", "Add method worked");
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.add(R.id.fragment_container, fragment);
+            transaction.commit();
+        }
     }
 
     public void removeFragment(Fragment fragment) {
@@ -42,9 +48,13 @@ public class FrgmntMngr {
     }
 
     public Fragment replaceFragment(Fragment fragment) {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.commit();
+        Log.wtf("WTF", "Replace method " + MainActivity.isInLandscapeMode());
+        if (MainActivity.isInLandscapeMode() != true) {
+            Log.wtf("WTF", "Replace method worked");
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.commit();
+        }
         return fragment;
     }
 
@@ -64,5 +74,9 @@ public class FrgmntMngr {
 
     public MainActivity getMainActivity() {
         return mainActivity;
+    }
+
+    public Fragment addToFragments(String key, Fragment fragment){
+        return fragmentsMap.put(key, fragment);
     }
 }
