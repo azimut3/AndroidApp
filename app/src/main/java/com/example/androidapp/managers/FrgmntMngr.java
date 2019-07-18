@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.androidapp.MainActivity;
+import com.example.androidapp.activities.MainActivity;
 import com.example.androidapp.R;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
