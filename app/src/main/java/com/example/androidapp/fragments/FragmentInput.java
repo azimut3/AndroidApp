@@ -9,16 +9,25 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.androidapp.R;
+import com.example.androidapp.data.Berth;
 import com.example.androidapp.data.Human;
+import com.example.androidapp.data.Parser;
+import com.example.androidapp.data.PortContent;
+import com.example.androidapp.managers.BerthListAdapter;
 import com.example.androidapp.managers.FrgmntMngr;
 
+import java.util.ArrayList;
+
 public class FragmentInput extends Fragment {
-    EditText nameField;
-    EditText ageField;
-    EditText surnameField;
-    Button submitBtn;
+
+    RecyclerView recyclerView;
+    ArrayList<Berth> items;
+    BerthListAdapter adapter;
+
     FrgmntMngr frgmntMngr;
 
     public FragmentInput() {
@@ -33,41 +42,18 @@ public class FragmentInput extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_input, container, false);
+        recyclerView = view.findViewById(R.id.my_recycler_view);
 
-        nameField = view.findViewById(R.id.nameField);
-        surnameField = view.findViewById(R.id.surnameField);
-        ageField = view.findViewById(R.id.ageField);
-        submitBtn = view.findViewById(R.id.submitBtn);
+        Parser.parsePort();
+        adapter = new BerthListAdapter(PortContent.getPortContentInstance().getListOfBerths(), this.getContext());
 
-        submitBtn.setOnClickListener((e) -> submitAction());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setAdapter(adapter);
 
         return view;
     }
 
-    public void submitAction(){
-        String name = nameField.getText().toString();
-        String surname = surnameField.getText().toString();
-        String age = ageField.getText().toString();
-        FragmentResult resultFrmnt = (FragmentResult)FrgmntMngr.getManager().replaceFragment(
-                FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
-        if (name != null && surname != null && age != null) {
-            Human human = Human.saveHuman(name, surname, age);
-            //Intent humanSubmitIntent = new Intent(this, HumanActivity.class);
-            //humanSubmitIntent.putExtra("human", human);
-            //startActivity(humanSubmitIntent);
-            Log.d("FragmentInput", "Result button pressed");
-            if (resultFrmnt.getResultField() == null) {
-                resultFrmnt.setResultFieldText(human.toString());
-            }
-            else {
-                resultFrmnt.getResultField().setText(human.toString());
-                Log.d("FragmentInput", "Now field in Result fragment says: "
-                        + resultFrmnt.getSubmitBtn().getText());
-            }
 
-        }
-
-
-    }
 }
