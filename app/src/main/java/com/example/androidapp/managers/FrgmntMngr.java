@@ -1,5 +1,6 @@
 package com.example.androidapp.managers;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,9 +9,11 @@ import android.util.Log;
 
 import com.example.androidapp.activities.MainActivity;
 import com.example.androidapp.R;
+import com.example.androidapp.data.Vessel;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,6 +32,10 @@ public class FrgmntMngr {
         fragmentsMap = new TreeMap<>();
         fragmentsMap.put(INPUT_FRAGMENT, new FragmentInput());
         fragmentsMap.put(RESULT_FRAGMENT, new FragmentResult());
+    }
+
+    public void addToVessels(Collection<Vessel> collection){
+        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToVessels(collection);
     }
 
     public void addFragment(Fragment fragment) {
@@ -76,7 +83,13 @@ public class FrgmntMngr {
         return mainActivity;
     }
 
+
     public Fragment addToFragments(String key, Fragment fragment){
         return fragmentsMap.put(key, fragment);
+    }
+
+    public Context getContext() {
+        System.out.println(mainActivity);
+        return mainActivity;
     }
 }

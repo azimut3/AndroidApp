@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.androidapp.R;
 import com.example.androidapp.data.Berth;
-import com.example.androidapp.data.Parser;
+import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.ViewHolder>{
 
     private List<Berth> items;
+    private OnTaskRecyclerItemClickListener listener;
     private Context ctx;
 
     public BerthListAdapter(List<Berth> items, Context ctx) {
@@ -31,6 +32,14 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
     public BerthListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.berth_element, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onItemClick(view, viewHolder.getAdapterPosition());
+                }
+            }
+        });
         return viewHolder;
     }
 
@@ -38,6 +47,8 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
     public void onBindViewHolder(BerthListAdapter.ViewHolder holder, int position) {
         holder.berthName.setText(items.get(position).getBerthName());
         holder.vesselList.setText(items.get(position).getVesselsNames());
+
+
         System.out.println("Binding view holder, " + items.get(position).getVesselsNames());
     }
 
@@ -46,8 +57,10 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
         return items.size();
     }
 
+    public void setListener(OnTaskRecyclerItemClickListener listener) {
+        this.listener = listener;
+    }
 
-    //TODO rearrange this to vessel view
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout berthBlock;
@@ -65,5 +78,9 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
 
 
         }
+    }
+
+    public List<Berth> getItems() {
+        return items;
     }
 }

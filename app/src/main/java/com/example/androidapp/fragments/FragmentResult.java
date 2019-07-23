@@ -1,31 +1,44 @@
 package com.example.androidapp.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.androidapp.R;
+import com.example.androidapp.data.PortContent;
+import com.example.androidapp.data.Vessel;
+import com.example.androidapp.managers.BerthListAdapter;
 import com.example.androidapp.managers.FrgmntMngr;
+import com.example.androidapp.managers.VesselListAdapter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class FragmentResult extends Fragment {
-    private EditText resultField;
-    private String resultFieldText;
-    private Button submitBtn;
-    FrgmntMngr frgmntMngr;
+    private RecyclerView recyclerView;
+    private VesselListAdapter adapter;
+    private Context context;
+    private String titlsString;
+    private TextView title;
+
+    List<Vessel> vessels = new ArrayList<>();
 
     public FragmentResult() {
-        this.frgmntMngr = FrgmntMngr.getManager();
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        context = this.getActivity();
 
     }
 
@@ -34,26 +47,21 @@ public class FragmentResult extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("FragmentResult", "onCreate()");
         View view = inflater.inflate(R.layout.fragment_result, container, false);
-        resultField = view.findViewById(R.id.resultField);
-        if (resultFieldText != null) resultField.setText(resultFieldText);
-        submitBtn = view.findViewById(R.id.resultBtn);
-        submitBtn.setOnClickListener((e) -> closeAction());
+        recyclerView = view.findViewById(R.id.my_recycler_view);
+        title = view.findViewById(R.id.title);
+        if (titlsString != null) title.setText(titlsString);
+        adapter = new VesselListAdapter(vessels, this.getContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
-    public void setResultFieldText(String text) {
-        this.resultFieldText = text;
-    }
+    public void addToVessels(Collection<Vessel> collection){
+        vessels.clear();
+        vessels.addAll(collection);
+        titlsString = "Berth #" + vessels.get(0).getBerth();
+        if (title != null) title.setText(titlsString);
 
-    private void closeAction(){
-        FrgmntMngr.getManager().getMainActivity().finish();
-    }
-
-    public Button getSubmitBtn() {
-        return submitBtn;
-    }
-
-    public EditText getResultField() {
-        return resultField;
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 }
