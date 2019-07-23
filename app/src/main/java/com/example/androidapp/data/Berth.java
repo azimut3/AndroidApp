@@ -38,10 +38,19 @@ public class Berth {
             StringBuilder builder = new StringBuilder();
             builder.append("Vessels: ");
             for (Vessel vessel : vessels){
-                builder.append(vessel.getVesselName()).append(" ");
+                builder.append(vessel.getVesselName()).append(", ");
             }
-            return  builder.toString();
+            String output = builder.toString();
+            return  output.substring(0, output.length()-2);
         }
         return "No info";
+    }
+
+    @Override
+    public String toString() {
+        return "Berth{" +
+                "berth='" + berth + '\'' +
+                ", vessels=" + vessels +
+                '}';
     }
 }

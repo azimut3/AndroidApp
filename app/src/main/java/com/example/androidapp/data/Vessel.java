@@ -80,4 +80,16 @@ public class Vessel {
         if (!(obj instanceof Vessel)) return false;
         return getVesselName().equals(((Vessel) obj).getVesselName());
     }
+
+    @Override
+    public String toString() {
+        return "Vessel{" +
+                "berth='" + berth + '\'' +
+                ", vesselName='" + vesselName + '\'' +
+                ", date='" + date + '\'' +
+                ", agent='" + agent + '\'' +
+                ", flag='" + flag + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

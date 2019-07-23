@@ -1,6 +1,7 @@
 package com.example.androidapp.managers;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,20 +9,19 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.androidapp.R;
 import com.example.androidapp.data.Berth;
 import com.example.androidapp.data.Parser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.ViewHolder>{
 
-    private ArrayList<Berth> items;
+    private List<Berth> items;
     private Context ctx;
 
-    public BerthListAdapter(ArrayList<Berth> items, Context ctx) {
+    public BerthListAdapter(List<Berth> items, Context ctx) {
         this.items = items;
         this.ctx = ctx;
     }
@@ -31,15 +31,14 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
     public BerthListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.berth_element, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-
-
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(BerthListAdapter.ViewHolder holder, int position) {
         holder.berthName.setText(items.get(position).getBerthName());
-        holder.vesselBlock.setText(items.get(position).getVesselsNames());
+        holder.vesselList.setText(items.get(position).getVesselsNames());
+        System.out.println("Binding view holder, " + items.get(position).getVesselsNames());
     }
 
     @Override
@@ -53,7 +52,7 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
 
         LinearLayout berthBlock;
         TextView berthName;
-        TextView vesselBlock;
+        TextView vesselList;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -62,7 +61,7 @@ public class BerthListAdapter extends RecyclerView.Adapter<BerthListAdapter.View
 
             berthBlock = itemView.findViewById(R.id.berth_block);
             berthName = itemView.findViewById(R.id.berth_name);
-            vesselBlock = itemView.findViewById(R.id.vessels_block);
+            vesselList = itemView.findViewById(R.id.vessels_list);
 
 
         }
