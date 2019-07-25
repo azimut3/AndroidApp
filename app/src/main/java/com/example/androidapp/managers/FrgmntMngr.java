@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.example.androidapp.activities.MainActivity;
 import com.example.androidapp.R;
-import com.example.androidapp.data.Vessel;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
 
