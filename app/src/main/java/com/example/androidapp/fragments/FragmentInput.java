@@ -14,10 +14,10 @@ import android.widget.Toast;
 import com.example.androidapp.R;
 import com.example.androidapp.api.RestClient;
 import com.example.androidapp.data.ErrorReply;
-import com.example.androidapp.data.SimplifiedForecat;
+import com.example.androidapp.managers.SimplifiedForecat;
 import com.example.androidapp.data.WeatherForecastReply;
 import com.example.androidapp.managers.FrgmntMngr;
-import com.example.androidapp.managers.WeatherForecastAdapter;
+import com.example.androidapp.managers.SimplifiedForecastAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -33,9 +33,10 @@ import retrofit2.Response;
 
 public class FragmentInput extends Fragment {
 
-    RecyclerView recyclerView;
-    WeatherForecastAdapter adapter;
+    private RecyclerView recyclerView;
+    private SimplifiedForecastAdapter adapter;
     private List<SimplifiedForecat> items = new ArrayList<>();
+    private WeatherForecastReply weatherForecastReply;
 
     public FragmentInput() {
 
@@ -54,9 +55,10 @@ public class FragmentInput extends Fragment {
         recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
         Button getForecastBtn = viewFragment.findViewById(R.id.get_forecast_btn);
 
-        adapter = new WeatherForecastAdapter(items, this.getContext());
+        adapter = new SimplifiedForecastAdapter(items, this.getContext());
         adapter.setListener((view, position) -> {
-            FrgmntMngr.getManager().toRecepientFragment(adapter.getItems().get(position).getDate());
+            FrgmntMngr.getManager().toRecipientFragment(weatherForecastReply
+                    .getComplexForecasts(adapter.getItems().get(position).getShortDate()));
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");
@@ -97,7 +99,8 @@ public class FragmentInput extends Fragment {
                 }
 
                 if(adapter.getItems().size()>0) adapter.getItems().clear();
-                adapter.getItems().addAll(response.body().getDatesAndTemperatures());
+                weatherForecastReply = response.body();
+                adapter.getItems().addAll(weatherForecastReply.getDatesAndTemperatures());
                 System.out.println("Content of items: " + adapter.getItems());
                 adapter.notifyDataSetChanged();
             }
@@ -119,7 +122,7 @@ public class FragmentInput extends Fragment {
 
         adapter = new BerthListAdapter(PortContent.getPortContentInstance().getListOfBerths(), this.getContext());
         adapter.setListener((view, position) -> {
-            FrgmntMngr.getManager().toRecepientFragment(adapter.getItems().get(position).getVessels());
+            FrgmntMngr.getManager().toRecipientFragment(adapter.getItems().get(position).getVessels());
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");

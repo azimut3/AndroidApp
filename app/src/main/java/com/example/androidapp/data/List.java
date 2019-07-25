@@ -11,7 +11,7 @@ public class List {
      */
     @SerializedName("dt")
     @Expose
-    private Integer dataForecasted;
+    private Integer timeStamp;
     @SerializedName("main")
     @Expose
     private Main main;
@@ -32,7 +32,7 @@ public class List {
      */
     @SerializedName("dt_txt")
     @Expose
-    private String dateTimeOfCalculation;
+    private String forecastDate;
     @SerializedName("rain")
     @Expose
     private Rain rain;
@@ -40,12 +40,12 @@ public class List {
     @Expose
     private Snow snow;
 
-    public Integer getDataForecasted() {
-        return dataForecasted;
+    public Integer getTimeStamp() {
+        return timeStamp;
     }
 
-    public void setDataForecasted(Integer dataForecasted) {
-        this.dataForecasted = dataForecasted;
+    public void setTimeStamp(Integer timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public Main getMain() {
@@ -88,12 +88,12 @@ public class List {
         this.sys = sys;
     }
 
-    public String getDateTimeOfCalculation() {
-        return dateTimeOfCalculation;
+    public String getForecastDate() {
+        return forecastDate;
     }
 
-    public void setDateTimeOfCalculation(String dateTimeOfCalculation) {
-        this.dateTimeOfCalculation = dateTimeOfCalculation;
+    public void setForecastDate(String forecastDate) {
+        this.forecastDate = forecastDate;
     }
 
     public Rain getRain() {
@@ -115,13 +115,13 @@ public class List {
     @Override
     public String toString() {
         return "List{" +
-                "dataForecasted=" + dataForecasted +
+                "timeStamp=" + timeStamp +
                 ", main=" + main +
                 ", weatherDescription=" + weatherDescription +
                 ", clouds=" + clouds +
                 ", wind=" + wind +
                 ", sys=" + sys +
-                ", dateTimeOfCalculation='" + dateTimeOfCalculation + '\'' +
+                ", forecastDate='" + forecastDate + '\'' +
                 ", rain=" + rain +
                 ", snow=" + snow +
                 '}';

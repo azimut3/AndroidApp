@@ -12,7 +12,7 @@ import com.example.androidapp.R;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -33,8 +33,8 @@ public class FrgmntMngr {
         fragmentsMap.put(RESULT_FRAGMENT, new FragmentResult());
     }
 
-    public void toRecepientFragment(String date){
-        //((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToVessels(collection);
+    public void toRecipientFragment(List<ComplexForecast> forecasts){
+        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToItems(forecasts);
     }
 
     public void addFragment(Fragment fragment) {

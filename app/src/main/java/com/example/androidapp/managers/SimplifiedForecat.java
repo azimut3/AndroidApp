@@ -1,4 +1,4 @@
-package com.example.androidapp.data;
+package com.example.androidapp.managers;
 
 import java.util.Objects;
 
@@ -15,6 +15,10 @@ public class SimplifiedForecat {
 
     public String getDate() {
         return date;
+    }
+
+    public String getShortDate() {
+        return date.substring(0, 10);
     }
 
     public SimplifiedForecat setDate(String date) {

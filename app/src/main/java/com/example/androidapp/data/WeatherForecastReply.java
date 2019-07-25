@@ -1,11 +1,13 @@
 
 package com.example.androidapp.data;
 
+import com.example.androidapp.managers.ComplexForecast;
+import com.example.androidapp.managers.SimplifiedForecat;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.TreeMap;
 
 public class WeatherForecastReply {
@@ -30,6 +32,7 @@ public class WeatherForecastReply {
     private City city;
 
     private static java.util.List<SimplifiedForecat> datesAndTemperatures = new ArrayList<>();
+    private static java.util.TreeMap<String, java.util.List<ComplexForecast>> complexForecasts = new TreeMap<>();
 
     public String getCod() {
         return cod;
@@ -76,12 +79,12 @@ public class WeatherForecastReply {
         return datesAndTemperatures;
     }
 
-    public java.util.List<SimplifiedForecat> setupDaysAndTemperatures(){
+    private java.util.List<SimplifiedForecat> setupDaysAndTemperatures(){
         SimplifiedForecat temForecast;
         SimplifiedForecat simplifiedForecat;
         for (List forecast : miniForecasts){
             temForecast = new SimplifiedForecat();
-            temForecast.setDate(forecast.getDateTimeOfCalculation())
+            temForecast.setDate(forecast.getForecastDate())
                     .setMinT(forecast.getMain().getTempMin())
                     .setMaxT(forecast.getMain().getTempMin())
                     .setWeatherState(forecast.getWeatherDescription().get(0).getDescription());
@@ -100,6 +103,32 @@ public class WeatherForecastReply {
         }
         //System.out.println(datesAndTemperatures);
         return datesAndTemperatures;
+    }
+
+    private void setupComplexForecasts(){
+        for(List forecast : miniForecasts) {
+            ComplexForecast complexForecast = new ComplexForecast(
+                    forecast.getForecastDate(),
+                    forecast.getWeatherDescription().get(0).getDescription(),
+                    forecast.getMain().getTempMin(),
+                    forecast.getMain().getTempMax(),
+                    forecast.getWind().getSpeed(),
+                    forecast.getWind().getDeg(),
+                    forecast.getMain().getHumidity(),
+                    forecast.getMain().getPressure()
+            );
+            if (complexForecasts.containsKey(complexForecast.getShortDate())) {
+                complexForecasts.get(complexForecast.getShortDate()).add(complexForecast);
+            } else {
+                complexForecasts.put(complexForecast.getShortDate(),
+                        new ArrayList<>(Arrays.asList(complexForecast)));
+            }
+        }
+    }
+
+    public java.util.List<ComplexForecast> getComplexForecasts(String shortDate) {
+        if (complexForecasts.size()<1) setupComplexForecasts();
+        return complexForecasts.get(shortDate);
     }
 
 }

@@ -6,31 +6,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.data.SimplifiedForecat;
-import com.example.androidapp.data.WeatherForecastReply;
 import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>{
+public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedForecastAdapter.ViewHolder>{
 
     private List<SimplifiedForecat> items;
     private OnTaskRecyclerItemClickListener listener;
     private Context ctx;
 
-    public WeatherForecastAdapter(List<SimplifiedForecat> items, Context ctx) {
+    public SimplifiedForecastAdapter(List<SimplifiedForecat> items, Context ctx) {
         this.items = items;
         this.ctx = ctx;
     }
 
     //TODO create vessel_view.fxml
     @Override
-    public WeatherForecastAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SimplifiedForecastAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.forecast_element, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(view1 -> {
@@ -42,9 +38,9 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
     }
 
     @Override
-    public void onBindViewHolder(WeatherForecastAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(SimplifiedForecastAdapter.ViewHolder holder, int position) {
+        holder.date.setText(items.get(position).getShortDate());
         holder.weatherType.setText(items.get(position).getWeatherState());
-        holder.date.setText(items.get(position).getDate());
         holder.minT.setText(String.valueOf(items.get(position).getMinTempToString()));
         holder.maxT.setText(String.valueOf(items.get(position).getMaxTempToString()));
 
