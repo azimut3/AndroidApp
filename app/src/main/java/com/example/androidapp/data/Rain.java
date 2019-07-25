@@ -18,4 +18,10 @@ public class Rain {
         this.volume = _3h;
     }
 
+    @Override
+    public String toString() {
+        return "Rain{" +
+                "volume=" + volume +
+                '}';
+    }
 }

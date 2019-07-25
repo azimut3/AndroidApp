@@ -14,6 +14,7 @@ import com.example.androidapp.data.SimplifiedForecat;
 import com.example.androidapp.data.WeatherForecastReply;
 import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecastAdapter.ViewHolder>{
@@ -30,14 +31,11 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
     //TODO create vessel_view.fxml
     @Override
     public WeatherForecastAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.berth_element, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.forecast_element, parent, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (listener != null) {
-                    listener.onItemClick(view, viewHolder.getAdapterPosition());
-                }
+        view.setOnClickListener(view1 -> {
+            if (listener != null) {
+                listener.onItemClick(view1, viewHolder.getAdapterPosition());
             }
         });
         return viewHolder;
@@ -47,8 +45,8 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
     public void onBindViewHolder(WeatherForecastAdapter.ViewHolder holder, int position) {
         holder.weatherType.setText(items.get(position).getWeatherState());
         holder.date.setText(items.get(position).getDate());
-        holder.minT.setText(String.valueOf(items.get(position).getMinT()));
-        holder.maxT.setText(String.valueOf(items.get(position).getMaxT()));
+        holder.minT.setText(String.valueOf(items.get(position).getMinTempToString()));
+        holder.maxT.setText(String.valueOf(items.get(position).getMaxTempToString()));
 
 
         System.out.println("Binding view holder, " + items.get(position));
@@ -65,7 +63,7 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout layout;
+        //LinearLayout layout;
         TextView weatherType;
         TextView date;
         TextView minT;
@@ -76,7 +74,7 @@ public class WeatherForecastAdapter extends RecyclerView.Adapter<WeatherForecast
 
             Log.e("TaskRecyclerAdapter", "finding views!");
 
-            layout = itemView.findViewById(R.id.layout);
+            //layout = itemView.findViewById(R.id.layout);
             weatherType = itemView.findViewById(R.id.weather_type);
             date = itemView.findViewById(R.id.date);
             minT = itemView.findViewById(R.id.t_min);

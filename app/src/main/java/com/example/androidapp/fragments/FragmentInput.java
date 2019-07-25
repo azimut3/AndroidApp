@@ -4,26 +4,20 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 
 import com.example.androidapp.R;
 import com.example.androidapp.api.RestClient;
-import com.example.androidapp.data.Berth;
-import com.example.androidapp.data.Human;
-import com.example.androidapp.data.Parser;
-import com.example.androidapp.data.PortContent;
-import com.example.androidapp.data.Vessel;
+import com.example.androidapp.data.ErrorReply;
+import com.example.androidapp.data.SimplifiedForecat;
 import com.example.androidapp.data.WeatherForecastReply;
-import com.example.androidapp.listeners.OnTaskItemLoadingCallback;
-import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
-import com.example.androidapp.managers.BerthListAdapter;
 import com.example.androidapp.managers.FrgmntMngr;
-import com.example.androidapp.util.HardTasks;
+import com.example.androidapp.managers.WeatherForecastAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -40,8 +34,8 @@ import retrofit2.Response;
 public class FragmentInput extends Fragment {
 
     RecyclerView recyclerView;
-    BerthListAdapter adapter;
-
+    WeatherForecastAdapter adapter;
+    private List<SimplifiedForecat> items = new ArrayList<>();
 
     public FragmentInput() {
 
@@ -58,19 +52,21 @@ public class FragmentInput extends Fragment {
 
         View viewFragment = inflater.inflate(R.layout.fragment_input, container, false);
         recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
+        Button getForecastBtn = viewFragment.findViewById(R.id.get_forecast_btn);
 
-        adapter = new BerthListAdapter(PortContent.getPortContentInstance().getListOfBerths(), this.getContext());
+        adapter = new WeatherForecastAdapter(items, this.getContext());
         adapter.setListener((view, position) -> {
-            FrgmntMngr.getManager().addToVessels(adapter.getItems().get(position).getVessels());
+            FrgmntMngr.getManager().toRecepientFragment(adapter.getItems().get(position).getDate());
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");
         });
 
-        new Thread(() -> {HardTasks.getTaskItemHardly("SomeTask", taskItemLoadingCallback);
-            }).start();
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(adapter);
+        getForecastBtn.setOnClickListener(view -> {
+            loadForecast("Odessa");
+        });
 
         return viewFragment;
     }
@@ -79,20 +75,20 @@ public class FragmentInput extends Fragment {
         Toast.makeText(this.getContext(), errorMessage, Toast.LENGTH_SHORT).show();
     }
 
-    private void loadRepos(String city) {
+    private void loadForecast(String city) {
         RestClient.getInstance().getService().getForecast(city).enqueue(new Callback<WeatherForecastReply>() {
 
             @Override
             public void onResponse(@NotNull Call<WeatherForecastReply> call, @NotNull Response<WeatherForecastReply> response) {
 
                 if (!response.isSuccessful()) {
-                    Converter<ResponseBody, GitRepoErrorItem> converter = RestClient.getInstance()
-                            .getRetrofit().responseBodyConverter(GitRepoErrorItem.class,
+                    Converter<ResponseBody, ErrorReply> converter = RestClient.getInstance()
+                            .getRetrofit().responseBodyConverter(ErrorReply.class,
                                     new Annotation[0]);
                     try {
-                        GitRepoErrorItem repoError = converter.convert(response.errorBody());
-                        makeErrorToast(repoError.getMessage() + " \n Details: " +
-                                repoError.getDocumentation_url());
+                        ErrorReply weatherError = converter.convert(response.errorBody());
+                        makeErrorToast(weatherError.getMessage() + " \n Details: " +
+                                weatherError.getMessage());
                     } catch (Exception e) {
                         makeErrorToast("Unhandled error. Code: " + response.code());
                     }
@@ -100,8 +96,9 @@ public class FragmentInput extends Fragment {
                     return;
                 }
 
-                items.clear();
-                items.addAll(response.body().get());
+                if(adapter.getItems().size()>0) adapter.getItems().clear();
+                adapter.getItems().addAll(response.body().getDatesAndTemperatures());
+                System.out.println("Content of items: " + adapter.getItems());
                 adapter.notifyDataSetChanged();
             }
 
@@ -122,7 +119,7 @@ public class FragmentInput extends Fragment {
 
         adapter = new BerthListAdapter(PortContent.getPortContentInstance().getListOfBerths(), this.getContext());
         adapter.setListener((view, position) -> {
-            FrgmntMngr.getManager().addToVessels(adapter.getItems().get(position).getVessels());
+            FrgmntMngr.getManager().toRecepientFragment(adapter.getItems().get(position).getVessels());
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");

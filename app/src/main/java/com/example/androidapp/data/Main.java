@@ -26,10 +26,10 @@ public class Main {
     private Double grndLevel;
     @SerializedName("humidity")
     @Expose
-    private Integer humidity;
+    private String humidity;
     @SerializedName("temp_kf")
     @Expose
-    private Integer tempKf;
+    private String tempKf;
 
     public Double getTemp() {
         return temp;
@@ -79,20 +79,33 @@ public class Main {
         this.grndLevel = grndLevel;
     }
 
-    public Integer getHumidity() {
+    public String getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(Integer humidity) {
+    public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
 
-    public Integer getTempKf() {
+    public String getTempKf() {
         return tempKf;
     }
 
-    public void setTempKf(Integer tempKf) {
+    public void setTempKf(String tempKf) {
         this.tempKf = tempKf;
     }
 
+    @Override
+    public String toString() {
+        return "Main{" +
+                "temp=" + temp +
+                ", tempMin=" + tempMin +
+                ", tempMax=" + tempMax +
+                ", pressure=" + pressure +
+                ", seaLevel=" + seaLevel +
+                ", grndLevel=" + grndLevel +
+                ", humidity='" + humidity + '\'' +
+                ", tempKf='" + tempKf + '\'' +
+                '}';
+    }
 }

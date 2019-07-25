@@ -51,4 +51,13 @@ public class WeatherDescription {
         this.icon = icon;
     }
 
+    @Override
+    public String toString() {
+        return "WeatherDescription{" +
+                "id=" + id +
+                ", main='" + main + '\'' +
+                ", description='" + description + '\'' +
+                ", icon='" + icon + '\'' +
+                '}';
+    }
 }

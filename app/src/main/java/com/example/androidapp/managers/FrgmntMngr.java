@@ -33,8 +33,8 @@ public class FrgmntMngr {
         fragmentsMap.put(RESULT_FRAGMENT, new FragmentResult());
     }
 
-    public void addToVessels(Collection<Vessel> collection){
-        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToVessels(collection);
+    public void toRecepientFragment(String date){
+        //((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToVessels(collection);
     }
 
     public void addFragment(Fragment fragment) {

@@ -15,7 +15,7 @@ public class List {
     @SerializedName("main")
     @Expose
     private Main main;
-    @SerializedName("weatherDescription")
+    @SerializedName("weather")
     @Expose
     private java.util.List<WeatherDescription> weatherDescription = null;
     @SerializedName("clouds")
@@ -112,4 +112,18 @@ public class List {
         this.snow = snow;
     }
 
+    @Override
+    public String toString() {
+        return "List{" +
+                "dataForecasted=" + dataForecasted +
+                ", main=" + main +
+                ", weatherDescription=" + weatherDescription +
+                ", clouds=" + clouds +
+                ", wind=" + wind +
+                ", sys=" + sys +
+                ", dateTimeOfCalculation='" + dateTimeOfCalculation + '\'' +
+                ", rain=" + rain +
+                ", snow=" + snow +
+                '}';
+    }
 }

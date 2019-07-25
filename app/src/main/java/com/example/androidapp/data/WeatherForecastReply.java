@@ -29,7 +29,7 @@ public class WeatherForecastReply {
     @Expose
     private City city;
 
-    private java.util.List<SimplifiedForecat> datesAndTemperatures = new ArrayList<>();
+    private static java.util.List<SimplifiedForecat> datesAndTemperatures = new ArrayList<>();
 
     public String getCod() {
         return cod;
@@ -72,20 +72,23 @@ public class WeatherForecastReply {
     }
 
     public java.util.List<SimplifiedForecat> getDatesAndTemperatures() {
+        if (datesAndTemperatures.size()<1) setupDaysAndTemperatures();
         return datesAndTemperatures;
     }
 
-    public void setupDaysAndTemperatures(){
-        SimplifiedForecat temForecast = new SimplifiedForecat();
+    public java.util.List<SimplifiedForecat> setupDaysAndTemperatures(){
+        SimplifiedForecat temForecast;
         SimplifiedForecat simplifiedForecat;
-        for (List forecat : miniForecasts){
-            temForecast.setDate(forecat.getDateTimeOfCalculation())
-                    .setMinT(forecat.getMain().getTempMin())
-                    .setMaxT(forecat.getMain().getTempMin())
-                    .setWeatherState(forecat.getWeatherDescription().get(0).getDescription());
+        for (List forecast : miniForecasts){
+            temForecast = new SimplifiedForecat();
+            temForecast.setDate(forecast.getDateTimeOfCalculation())
+                    .setMinT(forecast.getMain().getTempMin())
+                    .setMaxT(forecast.getMain().getTempMin())
+                    .setWeatherState(forecast.getWeatherDescription().get(0).getDescription());
             if (datesAndTemperatures.contains(temForecast)){
                 simplifiedForecat = datesAndTemperatures.get(datesAndTemperatures
                         .indexOf(temForecast));
+                System.out.println(simplifiedForecat + "=================");
                 if (simplifiedForecat.getMinT()>temForecast.getMinT()) simplifiedForecat
                         .setMinT(temForecast.getMinT());
                 if (simplifiedForecat.getMaxT()>temForecast.getMaxT()) simplifiedForecat
@@ -95,7 +98,8 @@ public class WeatherForecastReply {
                 datesAndTemperatures.add(temForecast);
             }
         }
-
+        //System.out.println(datesAndTemperatures);
+        return datesAndTemperatures;
     }
 
 }

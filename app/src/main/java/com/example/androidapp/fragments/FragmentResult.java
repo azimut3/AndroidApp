@@ -12,11 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.data.PortContent;
-import com.example.androidapp.data.Vessel;
-import com.example.androidapp.managers.BerthListAdapter;
 import com.example.androidapp.managers.FrgmntMngr;
-import com.example.androidapp.managers.VesselListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,12 +20,11 @@ import java.util.List;
 
 public class FragmentResult extends Fragment {
     private RecyclerView recyclerView;
-    private VesselListAdapter adapter;
     private Context context;
     private String titlsString;
     private TextView title;
 
-    List<Vessel> vessels = new ArrayList<>();
+    java.util.List<List> vessels = new ArrayList<>();
 
     public FragmentResult() {
     }
@@ -50,18 +45,18 @@ public class FragmentResult extends Fragment {
         recyclerView = view.findViewById(R.id.my_recycler_view);
         title = view.findViewById(R.id.title);
         if (titlsString != null) title.setText(titlsString);
-        adapter = new VesselListAdapter(vessels, this.getContext());
+        //adapter = new VesselListAdapter(vessels, this.getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(adapter);
+        //recyclerView.setAdapter(adapter);
         return view;
     }
 
-    public void addToVessels(Collection<Vessel> collection){
-        vessels.clear();
+    public void addToVessels(String value){
+       /* vessels.clear();
         vessels.addAll(collection);
         titlsString = "Berth #" + vessels.get(0).getBerth();
         if (title != null) title.setText(titlsString);
 
-        if (adapter != null) adapter.notifyDataSetChanged();
+        if (adapter != null) adapter.notifyDataSetChanged();*/
     }
 }

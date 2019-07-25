@@ -14,8 +14,8 @@ public interface ApiService {
     private static final String UNITS = "&units=metric";
     private static final String LANG = "&lang=ru";
     private static final String MODE = "&mode=xml";*/
-
-    @GET("/data/2.5/forecast")
+// http://api.openweathermap.org/data/2.5/forecast?id=698740&APPID=fe901b4ce965424b15397e529b828d91&units=metric&lang=eng&mode=json
+    @GET("/data/2.5/forecast?id=698740&APPID=fe901b4ce965424b15397e529b828d91&units=metric&lang=eng&mode=json")
     Call<WeatherForecastReply> getForecast(@Query("q") String query);
 
 

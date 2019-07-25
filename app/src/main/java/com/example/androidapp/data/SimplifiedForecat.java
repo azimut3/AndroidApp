@@ -26,6 +26,10 @@ public class SimplifiedForecat {
         return minT;
     }
 
+    public String getMinTempToString() {
+        return "min T°" + minT;
+    }
+
     public SimplifiedForecat setMinT(Double minT) {
         this.minT = minT;
         return this;
@@ -36,13 +40,17 @@ public class SimplifiedForecat {
         return maxT;
     }
 
-    public String getWeatherState() {
-        return weatherState;
+    public String getMaxTempToString() {
+        return "max T°" + maxT;
     }
 
     public SimplifiedForecat setWeatherState(String weatherState) {
         this.weatherState = weatherState;
         return this;
+    }
+
+    public String getWeatherState() {
+        return weatherState.substring(0, 1).toUpperCase() + weatherState.substring(1);
     }
 
     public SimplifiedForecat setMaxT(Double maxT) {
@@ -56,13 +64,21 @@ public class SimplifiedForecat {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SimplifiedForecat that = (SimplifiedForecat) o;
-        return Objects.equals(date, that.date);
+        return Objects.equals(date.substring(0, 10), that.date.substring(0, 10));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date);
+        return Objects.hash(date.substring(0, 10));
     }
 
-
+    @Override
+    public String toString() {
+        return "SimplifiedForecat{" +
+                "date='" + date + '\'' +
+                ", minT=" + minT +
+                ", maxT=" + maxT +
+                ", weatherState='" + weatherState + '\'' +
+                '}';
+    }
 }

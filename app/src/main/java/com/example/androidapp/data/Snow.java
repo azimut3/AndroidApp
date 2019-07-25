@@ -8,14 +8,20 @@ public class Snow {
 
     @SerializedName("3h")
     @Expose
-    private Double voulume;
+    private Double volume;
 
     public Double get3h() {
-        return voulume;
+        return volume;
     }
 
     public void set3h(Double _3h) {
-        this.voulume = _3h;
+        this.volume = _3h;
     }
 
+    @Override
+    public String toString() {
+        return "Snow{" +
+                "volume=" + volume +
+                '}';
+    }
 }

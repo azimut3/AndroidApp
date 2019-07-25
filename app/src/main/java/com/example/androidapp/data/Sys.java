@@ -18,4 +18,10 @@ public class Sys {
         this.pod = pod;
     }
 
+    @Override
+    public String toString() {
+        return "Sys{" +
+                "pod='" + pod + '\'' +
+                '}';
+    }
 }
