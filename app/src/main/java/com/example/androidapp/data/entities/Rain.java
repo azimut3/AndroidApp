@@ -1,10 +1,10 @@
 
-package com.example.androidapp.data;
+package com.example.androidapp.data.entities;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Snow {
+public class Rain {
 
     @SerializedName("3h")
     @Expose
@@ -20,7 +20,7 @@ public class Snow {
 
     @Override
     public String toString() {
-        return "Snow{" +
+        return "Rain{" +
                 "volume=" + volume +
                 '}';
     }

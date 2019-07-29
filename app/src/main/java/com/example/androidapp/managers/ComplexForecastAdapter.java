@@ -41,7 +41,7 @@ public class ComplexForecastAdapter extends RecyclerView.Adapter<ComplexForecast
     @Override
     public void onBindViewHolder(ComplexForecastAdapter.ViewHolder holder, int position) {
         holder.weatherType.setText(items.get(position).getWeatherState());
-        holder.date.setText(items.get(position).getShortDate());
+        holder.date.setText(items.get(position).getDate());
         holder.minT.setText(String.valueOf(items.get(position).getMinTempToString()));
         holder.maxT.setText(String.valueOf(items.get(position).getMaxTempToString()));
         holder.humidity.setText(String.valueOf(items.get(position).getHumidity()));

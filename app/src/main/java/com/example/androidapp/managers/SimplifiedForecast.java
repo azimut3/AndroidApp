@@ -2,14 +2,14 @@ package com.example.androidapp.managers;
 
 import java.util.Objects;
 
-public class SimplifiedForecat {
-    private String date;
-    private Double minT;
-    private Double maxT;
+public class SimplifiedForecast {
+    protected String date;
+    protected Double minT;
+    protected Double maxT;
     //todo redo weather state if improving app
-    private String weatherState;
+    protected String weatherState;
 
-    public SimplifiedForecat(){
+    public SimplifiedForecast(){
 
     }
 
@@ -21,7 +21,7 @@ public class SimplifiedForecat {
         return date.substring(0, 10);
     }
 
-    public SimplifiedForecat setDate(String date) {
+    public SimplifiedForecast setDate(String date) {
         this.date = date;
         return this;
     }
@@ -34,7 +34,7 @@ public class SimplifiedForecat {
         return "min T°" + minT;
     }
 
-    public SimplifiedForecat setMinT(Double minT) {
+    public SimplifiedForecast setMinT(Double minT) {
         this.minT = minT;
         return this;
 
@@ -48,7 +48,7 @@ public class SimplifiedForecat {
         return "max T°" + maxT;
     }
 
-    public SimplifiedForecat setWeatherState(String weatherState) {
+    public SimplifiedForecast setWeatherState(String weatherState) {
         this.weatherState = weatherState;
         return this;
     }
@@ -57,7 +57,7 @@ public class SimplifiedForecat {
         return weatherState.substring(0, 1).toUpperCase() + weatherState.substring(1);
     }
 
-    public SimplifiedForecat setMaxT(Double maxT) {
+    public SimplifiedForecast setMaxT(Double maxT) {
         this.maxT = maxT;
         return this;
 
@@ -67,7 +67,7 @@ public class SimplifiedForecat {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SimplifiedForecat that = (SimplifiedForecat) o;
+        SimplifiedForecast that = (SimplifiedForecast) o;
         return Objects.equals(date.substring(0, 10), that.date.substring(0, 10));
     }
 
@@ -78,7 +78,7 @@ public class SimplifiedForecat {
 
     @Override
     public String toString() {
-        return "SimplifiedForecat{" +
+        return "SimplifiedForecast{" +
                 "date='" + date + '\'' +
                 ", minT=" + minT +
                 ", maxT=" + maxT +

@@ -1,5 +1,5 @@
 
-package com.example.androidapp.data;
+package com.example.androidapp.data.entities;
 
 
 import com.google.gson.annotations.Expose;

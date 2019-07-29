@@ -15,11 +15,11 @@ import java.util.List;
 
 public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedForecastAdapter.ViewHolder>{
 
-    private List<SimplifiedForecat> items;
+    private List<SimplifiedForecast> items;
     private OnTaskRecyclerItemClickListener listener;
     private Context ctx;
 
-    public SimplifiedForecastAdapter(List<SimplifiedForecat> items, Context ctx) {
+    public SimplifiedForecastAdapter(List<SimplifiedForecast> items, Context ctx) {
         this.items = items;
         this.ctx = ctx;
     }
@@ -80,7 +80,7 @@ public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedFo
         }
     }
 
-    public List<SimplifiedForecat> getItems() {
+    public List<SimplifiedForecast> getItems() {
         return items;
     }
 }

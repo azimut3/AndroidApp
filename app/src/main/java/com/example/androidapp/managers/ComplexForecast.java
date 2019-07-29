@@ -1,10 +1,7 @@
 package com.example.androidapp.managers;
 
-public class ComplexForecast {
-    String date;
-    String weatherState;
-    Double minT;
-    Double maxT;
+public class ComplexForecast extends SimplifiedForecast {
+
     Double windSpeed;
     Double windDegrees;
     String humidity;
@@ -21,50 +18,6 @@ public class ComplexForecast {
         this.pressure = pressure;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public String getShortDate() {
-        return date.substring(0, 10);
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getWeatherState() {
-        return weatherState.substring(0, 1).toUpperCase() + weatherState.substring(1);
-    }
-
-    public void setWeatherState(String weatherState) {
-        this.weatherState = weatherState;
-    }
-
-    public Double getMinT() {
-        return minT;
-    }
-
-    public String getMinTempToString() {
-        return "min T°" + minT;
-    }
-
-    public void setMinT(Double minT) {
-        this.minT = minT;
-    }
-
-    public Double getMaxT() {
-        return maxT;
-    }
-
-    public String getMaxTempToString() {
-        return "max T°" + maxT;
-    }
-
-    public void setMaxT(Double maxT) {
-        this.maxT = maxT;
-    }
-
     public Double getWindSpeed() {
         return windSpeed;
     }
@@ -73,8 +26,9 @@ public class ComplexForecast {
         return String.format("Wind speed: %s m/s", windSpeed);
     }
 
-    public void setWindSpeed(Double windSpeed) {
+    public ComplexForecast setWindSpeed(Double windSpeed) {
         this.windSpeed = windSpeed;
+        return this;
     }
 
     public Double getWindDegrees() {
@@ -85,16 +39,18 @@ public class ComplexForecast {
         return String.format("Wind direction: %s°", windDegrees);
     }
 
-    public void setWindDegrees(Double windDegrees) {
+    public ComplexForecast setWindDegrees(Double windDegrees) {
         this.windDegrees = windDegrees;
+        return this;
     }
 
     public String getHumidity() {
         return String.format("Humidity: %s%s", humidity, "%");
     }
 
-    public void setHumidity(String humidity) {
+    public ComplexForecast setHumidity(String humidity) {
         this.humidity = humidity;
+        return this;
     }
 
     public Double getPressure() {
@@ -105,8 +61,9 @@ public class ComplexForecast {
         return String.format("Pressure: %shPa", pressure);
     }
 
-    public void setPressure(Double pressure) {
+    public ComplexForecast setPressure(Double pressure) {
         this.pressure = pressure;
+        return this;
     }
 
     @Override

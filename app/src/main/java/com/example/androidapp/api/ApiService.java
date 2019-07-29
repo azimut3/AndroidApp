@@ -1,7 +1,7 @@
 package com.example.androidapp.api;
 
 
-import com.example.androidapp.data.WeatherForecastReply;
+import com.example.androidapp.data.entities.WeatherForecastReply;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

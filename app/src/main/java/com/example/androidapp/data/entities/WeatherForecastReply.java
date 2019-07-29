@@ -1,8 +1,8 @@
 
-package com.example.androidapp.data;
+package com.example.androidapp.data.entities;
 
 import com.example.androidapp.managers.ComplexForecast;
-import com.example.androidapp.managers.SimplifiedForecat;
+import com.example.androidapp.managers.SimplifiedForecast;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -31,7 +31,7 @@ public class WeatherForecastReply {
     @Expose
     private City city;
 
-    private static java.util.List<SimplifiedForecat> datesAndTemperatures = new ArrayList<>();
+    private static java.util.List<SimplifiedForecast> datesAndTemperatures = new ArrayList<>();
     private static java.util.TreeMap<String, java.util.List<ComplexForecast>> complexForecasts = new TreeMap<>();
 
     public String getCod() {
@@ -74,29 +74,29 @@ public class WeatherForecastReply {
         this.city = city;
     }
 
-    public java.util.List<SimplifiedForecat> getDatesAndTemperatures() {
+    public java.util.List<SimplifiedForecast> getDatesAndTemperatures() {
         if (datesAndTemperatures.size()<1) setupDaysAndTemperatures();
         return datesAndTemperatures;
     }
 
-    private java.util.List<SimplifiedForecat> setupDaysAndTemperatures(){
-        SimplifiedForecat temForecast;
-        SimplifiedForecat simplifiedForecat;
+    private java.util.List<SimplifiedForecast> setupDaysAndTemperatures(){
+        SimplifiedForecast temForecast;
+        SimplifiedForecast simplifiedForecast;
         for (List forecast : miniForecasts){
-            temForecast = new SimplifiedForecat();
+            temForecast = new SimplifiedForecast();
             temForecast.setDate(forecast.getForecastDate())
                     .setMinT(forecast.getMain().getTempMin())
                     .setMaxT(forecast.getMain().getTempMin())
                     .setWeatherState(forecast.getWeatherDescription().get(0).getDescription());
             if (datesAndTemperatures.contains(temForecast)){
-                simplifiedForecat = datesAndTemperatures.get(datesAndTemperatures
+                simplifiedForecast = datesAndTemperatures.get(datesAndTemperatures
                         .indexOf(temForecast));
-                System.out.println(simplifiedForecat + "=================");
-                if (simplifiedForecat.getMinT()>temForecast.getMinT()) simplifiedForecat
+                System.out.println(simplifiedForecast + "=================");
+                if (simplifiedForecast.getMinT()>temForecast.getMinT()) simplifiedForecast
                         .setMinT(temForecast.getMinT());
-                if (simplifiedForecat.getMaxT()>temForecast.getMaxT()) simplifiedForecat
+                if (simplifiedForecast.getMaxT()>temForecast.getMaxT()) simplifiedForecast
                         .setMaxT(temForecast.getMaxT());
-                simplifiedForecat.setWeatherState(temForecast.getWeatherState());
+                simplifiedForecast.setWeatherState(temForecast.getWeatherState());
             } else {
                 datesAndTemperatures.add(temForecast);
             }

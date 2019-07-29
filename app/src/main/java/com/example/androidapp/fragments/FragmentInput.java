@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.example.androidapp.R;
 import com.example.androidapp.api.RestClient;
-import com.example.androidapp.data.ErrorReply;
-import com.example.androidapp.managers.SimplifiedForecat;
-import com.example.androidapp.data.WeatherForecastReply;
+import com.example.androidapp.data.entities.ErrorReply;
+import com.example.androidapp.managers.SimplifiedForecast;
+import com.example.androidapp.data.entities.WeatherForecastReply;
 import com.example.androidapp.managers.FrgmntMngr;
 import com.example.androidapp.managers.SimplifiedForecastAdapter;
 
@@ -35,7 +35,7 @@ public class FragmentInput extends Fragment {
 
     private RecyclerView recyclerView;
     private SimplifiedForecastAdapter adapter;
-    private List<SimplifiedForecat> items = new ArrayList<>();
+    private List<SimplifiedForecast> items = new ArrayList<>();
     private WeatherForecastReply weatherForecastReply;
 
     public FragmentInput() {
