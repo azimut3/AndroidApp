@@ -86,7 +86,7 @@ public class WeatherForecastReply {
             temForecast = new SimplifiedForecast();
             temForecast.setDate(forecast.getForecastDate())
                     .setMinT(forecast.getMain().getTempMin())
-                    .setMaxT(forecast.getMain().getTempMin())
+                    .setMaxT(forecast.getMain().getTempMax())
                     .setWeatherState(forecast.getWeatherDescription().get(0).getDescription());
             if (datesAndTemperatures.contains(temForecast)){
                 simplifiedForecast = datesAndTemperatures.get(datesAndTemperatures
@@ -94,7 +94,7 @@ public class WeatherForecastReply {
                 System.out.println(simplifiedForecast + "=================");
                 if (simplifiedForecast.getMinT()>temForecast.getMinT()) simplifiedForecast
                         .setMinT(temForecast.getMinT());
-                if (simplifiedForecast.getMaxT()>temForecast.getMaxT()) simplifiedForecast
+                if (simplifiedForecast.getMaxT()<temForecast.getMaxT()) simplifiedForecast
                         .setMaxT(temForecast.getMaxT());
                 simplifiedForecast.setWeatherState(temForecast.getWeatherState());
             } else {
