@@ -1,9 +1,15 @@
 package com.example.androidapp.fragments;
 
+import android.app.LoaderManager;
+import android.content.Context;
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +19,8 @@ import android.widget.Toast;
 
 import com.example.androidapp.R;
 import com.example.androidapp.api.RestClient;
+import com.example.androidapp.data.Consts;
+import com.example.androidapp.data.Database;
 import com.example.androidapp.data.entities.ErrorReply;
 import com.example.androidapp.managers.SimplifiedForecast;
 import com.example.androidapp.data.entities.WeatherForecastReply;
@@ -31,12 +39,15 @@ import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
 
-public class FragmentInput extends Fragment {
+public class FragmentInput extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
 
     private RecyclerView recyclerView;
     private SimplifiedForecastAdapter adapter;
     private List<SimplifiedForecast> items = new ArrayList<>();
     private WeatherForecastReply weatherForecastReply;
+
+    private Database database;
+
 
     public FragmentInput() {
 
@@ -55,8 +66,12 @@ public class FragmentInput extends Fragment {
         recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
         Button getForecastBtn = viewFragment.findViewById(R.id.get_forecast_btn);
 
-        adapter = new SimplifiedForecastAdapter(items, this.getContext());
-        adapter.setListener((view, position) -> {
+        database = new Database(this.getContext());
+        database.open();
+
+        getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
+
+        adapter = new SimplifiedForecastAdapter(database.getAllSimpleData(), this.getContext(), (view, position) -> {
             FrgmntMngr.getManager().toRecipientFragment(weatherForecastReply
                     .getComplexForecasts(adapter.getItems().get(position).getShortDate()));
             FrgmntMngr.getManager().replaceFragment(
@@ -98,11 +113,10 @@ public class FragmentInput extends Fragment {
                     return;
                 }
 
-                if(adapter.getItems().size()>0) adapter.getItems().clear();
                 weatherForecastReply = response.body();
-                adapter.getItems().addAll(weatherForecastReply.getDatesAndTemperatures());
+                updateList(weatherForecastReply.getDatesAndTemperatures());
                 System.out.println("Content of items: " + adapter.getItems());
-                adapter.notifyDataSetChanged();
+//                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -113,51 +127,52 @@ public class FragmentInput extends Fragment {
         });
     }
 
-    /*@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    private void updateList(List<SimplifiedForecast> itemsToUpdate) {
+        database.clearSimpleData();
+        database.addSimpleData(itemsToUpdate);
+        getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
+    }
 
-        View viewFragment = inflater.inflate(R.layout.fragment_input, container, false);
-        recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(this.getClass().getName(), "onDestroy()");
+        getLoaderManager().destroyLoader(Consts.LOADER_ID);
+        database.close();
+    }
 
-        adapter = new BerthListAdapter(PortContent.getPortContentInstance().getListOfBerths(), this.getContext());
-        adapter.setListener((view, position) -> {
-            FrgmntMngr.getManager().toRecipientFragment(adapter.getItems().get(position).getVessels());
-            FrgmntMngr.getManager().replaceFragment(
-                    FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
-            System.out.println("Action clicked");
-        });
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new MyCursorLoader(this.getContext(), database);
+    }
 
-        new Thread(() -> {HardTasks.getTaskItemHardly("SomeTask", taskItemLoadingCallback);
-            }).start();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        recyclerView.setAdapter(adapter);
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
 
-        return viewFragment;
-    }*/
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
 
-    /*private OnTaskItemLoadingCallback taskItemLoadingCallback = new OnTaskItemLoadingCallback() {
-        @Override
-        public void onLoadingStarted() {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                }
-            });
+    /**
+     * Subclass of {@link android.content.CursorLoader} which provides loader associated
+     * with application database's implementation.
+     */
+    static class MyCursorLoader extends CursorLoader {
+
+        Database db;
+
+        public MyCursorLoader(Context context, Database db) {
+            super(context);
+            this.db = db;
         }
 
         @Override
-        public void onLoadingFinish(List<Berth> berths) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    //adapter = new BerthListAdapter(berths, getContext());
-                    System.out.println("Adapter loaded");
-                    adapter.notifyDataSetChanged();
-                }
-            });
-
+        public Cursor loadInBackground() {
+            return db.getAllSimpleData();
         }
-    };*/
+
+    }
 }

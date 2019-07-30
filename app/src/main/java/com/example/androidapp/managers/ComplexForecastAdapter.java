@@ -1,28 +1,37 @@
 package com.example.androidapp.managers;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
+import com.example.androidapp.data.Consts;
+import com.example.androidapp.data.CursorRecyclerViewAdapter;
+import com.example.androidapp.listeners.OnForecastClickListener;
 
 import java.util.List;
 
-public class ComplexForecastAdapter extends RecyclerView.Adapter<ComplexForecastAdapter.ViewHolder>{
+public class ComplexForecastAdapter extends CursorRecyclerViewAdapter<ComplexForecastAdapter.ViewHolder> {
 
     private List<ComplexForecast> items;
-    private OnTaskRecyclerItemClickListener listener;
+    private OnForecastClickListener listener;
     private Context ctx;
 
-    public ComplexForecastAdapter(List<ComplexForecast> items, Context ctx) {
-        this.items = items;
+    public ComplexForecastAdapter(Cursor cursor, Context ctx) {
+        super(ctx, cursor);
         this.ctx = ctx;
+    }
+
+    public ComplexForecastAdapter(Cursor cursor, Context ctx, OnForecastClickListener listener) {
+        super(ctx, cursor);
+        this.ctx = ctx;
+        this.listener = listener;
     }
 
     //TODO create vessel_view.fxml
@@ -39,17 +48,35 @@ public class ComplexForecastAdapter extends RecyclerView.Adapter<ComplexForecast
     }
 
     @Override
-    public void onBindViewHolder(ComplexForecastAdapter.ViewHolder holder, int position) {
-        holder.weatherType.setText(items.get(position).getWeatherState());
-        holder.date.setText(items.get(position).getDate());
-        holder.minT.setText(String.valueOf(items.get(position).getMinTempToString()));
-        holder.maxT.setText(String.valueOf(items.get(position).getMaxTempToString()));
-        holder.humidity.setText(String.valueOf(items.get(position).getHumidity()));
-        holder.pressure.setText(String.valueOf(items.get(position).getPressureToString()));
-        holder.windSpeed.setText(String.valueOf(items.get(position).getWindSpeedToString()));
-        holder.windDir.setText(String.valueOf(items.get(position).getWindDegreesToString()));
+    public void onBindViewHolder(ComplexForecastAdapter.ViewHolder holder, Cursor cursor) {
+        holder.weatherType.setText(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE));
+        holder.date.setText(cursor.getColumnIndex(Consts.DB_COL_DATE));
+        holder.minT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MIN_T)));
+        holder.maxT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+        holder.humidity.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_HUMIDITY)));
+        holder.pressure.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_PRESSURE)));
+        holder.windSpeed.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_SPEED)));
+        holder.windDir.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_DEGREES)));
 
-        System.out.println("Binding view holder, " + items.get(position));
+        System.out.println("Binding view holder, with ComplexForecast");
+    }
+
+    public ComplexForecast getItem(int position) {
+        Cursor cursor = getCursor();
+        ComplexForecast item = new ComplexForecast();
+
+        if (cursor.moveToPosition(position)) {
+            item.setDate(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
+                .setWeatherState(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
+                .setMinT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
+                .setMaxT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+            item.setHumidity(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
+                .setPressure(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
+                .setWindSpeed(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
+                .setWindDegrees(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+        }
+
+        return item;
     }
 
     @Override
@@ -57,7 +84,7 @@ public class ComplexForecastAdapter extends RecyclerView.Adapter<ComplexForecast
         return items.size();
     }
 
-    public void setListener(OnTaskRecyclerItemClickListener listener) {
+    public void setListener(OnForecastClickListener listener) {
         this.listener = listener;
     }
 
@@ -92,7 +119,7 @@ public class ComplexForecastAdapter extends RecyclerView.Adapter<ComplexForecast
         }
     }
 
-    public List<ComplexForecast> getItems() {
+    /*public List<ComplexForecast> getItems() {
         return items;
-    }
+    }*/
 }

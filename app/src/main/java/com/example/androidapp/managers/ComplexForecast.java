@@ -7,6 +7,9 @@ public class ComplexForecast extends SimplifiedForecast {
     String humidity;
     Double pressure;
 
+    public ComplexForecast() {
+    }
+
     public ComplexForecast(String date, String weatherState, Double minT, Double maxT, Double windSpeed, Double windDegrees, String humidity, Double pressure) {
         this.date = date;
         this.weatherState = weatherState;

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.androidapp.R;
+import com.example.androidapp.data.Consts;
+import com.example.androidapp.data.Database;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
 import com.example.androidapp.managers.FrgmntMngr;
@@ -15,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     static private boolean inLandscapeMode;
     FragmentResult fragmentResult;
     FragmentInput fragmentInput;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

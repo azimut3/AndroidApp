@@ -1,6 +1,7 @@
 package com.example.androidapp.managers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,19 +10,27 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.listeners.OnTaskRecyclerItemClickListener;
+import com.example.androidapp.data.Consts;
+import com.example.androidapp.data.CursorRecyclerViewAdapter;
+import com.example.androidapp.listeners.OnForecastClickListener;
 
 import java.util.List;
 
-public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedForecastAdapter.ViewHolder>{
+public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<SimplifiedForecastAdapter.ViewHolder> {
 
     private List<SimplifiedForecast> items;
-    private OnTaskRecyclerItemClickListener listener;
+    private OnForecastClickListener listener;
     private Context ctx;
 
-    public SimplifiedForecastAdapter(List<SimplifiedForecast> items, Context ctx) {
-        this.items = items;
+    public SimplifiedForecastAdapter(Cursor cursor, Context ctx) {
+        super(ctx, cursor);
         this.ctx = ctx;
+    }
+
+    public SimplifiedForecastAdapter(Cursor cursor, Context ctx, OnForecastClickListener listener) {
+        super(ctx, cursor);
+        this.ctx = ctx;
+        this.listener = listener;
     }
 
     //TODO create vessel_view.fxml
@@ -38,14 +47,28 @@ public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedFo
     }
 
     @Override
-    public void onBindViewHolder(SimplifiedForecastAdapter.ViewHolder holder, int position) {
-        holder.date.setText(items.get(position).getShortDate());
-        holder.weatherType.setText(items.get(position).getWeatherState());
-        holder.minT.setText(String.valueOf(items.get(position).getMinTempToString()));
-        holder.maxT.setText(String.valueOf(items.get(position).getMaxTempToString()));
+    public void onBindViewHolder(SimplifiedForecastAdapter.ViewHolder holder, Cursor cursor) {
+        holder.weatherType.setText(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE));
+        holder.date.setText(cursor.getColumnIndex(Consts.DB_COL_DATE));
+        holder.minT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MIN_T)));
+        holder.maxT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
 
 
-        System.out.println("Binding view holder, " + items.get(position));
+        System.out.println("Binding view holder, for SimpleForecast");
+    }
+
+    public SimplifiedForecast getItem(int position) {
+        Cursor cursor = getCursor();
+        SimplifiedForecast item = new SimplifiedForecast();
+
+        if (cursor.moveToPosition(position)) {
+            item.setDate(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
+                    .setWeatherState(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
+                    .setMinT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
+                    .setMaxT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+        }
+
+        return item;
     }
 
     @Override
@@ -53,7 +76,7 @@ public class SimplifiedForecastAdapter extends RecyclerView.Adapter<SimplifiedFo
         return items.size();
     }
 
-    public void setListener(OnTaskRecyclerItemClickListener listener) {
+    public void setListener(OnForecastClickListener listener) {
         this.listener = listener;
     }
 
