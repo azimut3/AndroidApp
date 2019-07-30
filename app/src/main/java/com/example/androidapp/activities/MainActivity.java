@@ -43,4 +43,12 @@ public class MainActivity extends AppCompatActivity {
     public static boolean isInLandscapeMode() {
         return inLandscapeMode;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(this.getClass().getName(), "onDestroy()");
+        frgmntMngr.getDatabase().close();
+        getLoaderManager().destroyLoader(Consts.LOADER_ID);
+    }
 }

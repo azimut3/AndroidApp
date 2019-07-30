@@ -37,21 +37,16 @@ public class FragmentResult extends Fragment implements LoaderManager.LoaderCall
     private String date;
     private TextView title;
     List<ComplexForecast> itemsToUpdate;
-
     java.util.List<ComplexForecast> forecasts = new ArrayList<>();
-    private Database database;
-
 
     public FragmentResult() {
 
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this.getActivity();
-
     }
 
     @Override
@@ -66,18 +61,15 @@ public class FragmentResult extends Fragment implements LoaderManager.LoaderCall
         title = view.findViewById(R.id.title);
         if (titlsString != null) title.setText(titlsString);
 
-        database = new Database(this.getContext());
-        database.open();
-
         getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
 
         if (itemsToUpdate != null) {
-            database.clearComplexData();
-            database.addComplexData(itemsToUpdate);
+            getDatabase().clearComplexData();
+            getDatabase().addComplexData(itemsToUpdate);
             getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
         }
 
-        adapter = new ComplexForecastAdapter(database.getAllComplexData(), this.getContext(), null);
+        adapter = new ComplexForecastAdapter(getDatabase().getAllComplexData(), this.getContext(), null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(adapter);
         return view;
@@ -86,7 +78,7 @@ public class FragmentResult extends Fragment implements LoaderManager.LoaderCall
     public void updateList(String date) {
         this.date = date;
         if (adapter!= null) {
-            adapter.setCursor(database.getComplexDataByDate(date));
+            adapter.setCursor(getDatabase().getComplexDataByDate(date));
             adapter.notifyDataSetChanged();
         }
     }
@@ -95,14 +87,13 @@ public class FragmentResult extends Fragment implements LoaderManager.LoaderCall
     public void onDestroy() {
         super.onDestroy();
         Log.d(this.getClass().getName(), "onDestroy()");
-        getLoaderManager().destroyLoader(Consts.LOADER_ID);
-        database.close();
+        //getLoaderManager().destroyLoader(Consts.LOADER_ID);
     }
 
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(FrgmntMngr.getManager().getContext(), database, date);
+        return new MyCursorLoader(FrgmntMngr.getManager().getContext(), getDatabase(), date);
     }
 
     @Override
@@ -138,4 +129,9 @@ public class FragmentResult extends Fragment implements LoaderManager.LoaderCall
         }
 
     }
+
+    private Database getDatabase() {
+        return FrgmntMngr.getManager().getDatabase();
+    }
+
 }

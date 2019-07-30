@@ -28,7 +28,6 @@ public class Database {
     public void open() {
         helper = new DBHelper(ctx, Consts.DB_NAME, null, Consts.DB_VERSION);
         mDB = helper.getWritableDatabase();
-
     }
 
     public void close() {

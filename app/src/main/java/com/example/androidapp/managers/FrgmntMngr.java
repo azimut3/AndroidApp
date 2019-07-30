@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.androidapp.activities.MainActivity;
 import com.example.androidapp.R;
+import com.example.androidapp.data.Database;
 import com.example.androidapp.fragments.FragmentInput;
 import com.example.androidapp.fragments.FragmentResult;
 
@@ -22,6 +23,7 @@ public class FrgmntMngr {
     private FragmentManager manager;
     private Map<String, Fragment> fragmentsMap;
     MainActivity mainActivity;
+    private static Database database;
 
     public static final String INPUT_FRAGMENT = "input";
     public static final String RESULT_FRAGMENT = "result";
@@ -73,6 +75,8 @@ public class FrgmntMngr {
     public static FrgmntMngr createManager(FragmentManager manager, MainActivity mainActivity){
         if (frgmntMngr == null) frgmntMngr = new FrgmntMngr(manager, mainActivity);
         frgmntMngr.manager = manager;
+        database = new Database(frgmntMngr.getContext());
+        database.open();
         return frgmntMngr;
     }
 
@@ -92,5 +96,9 @@ public class FrgmntMngr {
     public Context getContext() {
         System.out.println(mainActivity);
         return mainActivity;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 }

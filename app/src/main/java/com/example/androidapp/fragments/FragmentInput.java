@@ -48,9 +48,6 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
     private List<SimplifiedForecast> items = new ArrayList<>();
     private WeatherForecastReply weatherForecastReply;
 
-    private Database database;
-
-
     public FragmentInput() {
 
     }
@@ -68,12 +65,9 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
         recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
         Button getForecastBtn = viewFragment.findViewById(R.id.get_forecast_btn);
 
-        database = new Database(this.getContext());
-        database.open();
-
         getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
 
-        adapter = new SimplifiedForecastAdapter(database.getAllSimpleData(), this.getContext(), (view, position, date) -> {
+        adapter = new SimplifiedForecastAdapter(getDatabase().getAllSimpleData(), this.getContext(), (view, position, date) -> {
             FrgmntMngr.getManager().toRecipientFragment(date);
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
@@ -129,10 +123,10 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
     }
 
     private void updateList(List<SimplifiedForecast> simpleItems, List<ComplexForecast> complexItems) {
-        database.clearSimpleData();
-        database.addSimpleData(simpleItems);
-        database.clearComplexData();
-        database.addComplexData(complexItems);
+        getDatabase().clearSimpleData();
+        getDatabase().addSimpleData(simpleItems);
+        getDatabase().clearComplexData();
+        getDatabase().addComplexData(complexItems);
         getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
     }
 
@@ -140,13 +134,12 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
     public void onDestroy() {
         super.onDestroy();
         Log.d(this.getClass().getName(), "onDestroy()");
-        getLoaderManager().destroyLoader(Consts.LOADER_ID);
-        database.close();
+        //getLoaderManager().destroyLoader(Consts.LOADER_ID);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this.getContext(), database);
+        return new MyCursorLoader(this.getContext(), getDatabase());
     }
 
     @Override
@@ -177,5 +170,9 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
             return db.getAllSimpleData();
         }
 
+    }
+
+    private Database getDatabase() {
+        return FrgmntMngr.getManager().getDatabase();
     }
 }
