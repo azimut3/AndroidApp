@@ -19,7 +19,6 @@ import java.util.List;
 
 public class ComplexForecastAdapter extends CursorRecyclerViewAdapter<ComplexForecastAdapter.ViewHolder> {
 
-    private List<ComplexForecast> items;
     private OnForecastClickListener listener;
     private Context ctx;
 
@@ -41,7 +40,7 @@ public class ComplexForecastAdapter extends CursorRecyclerViewAdapter<ComplexFor
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(view1 -> {
             if (listener != null) {
-                listener.onItemClick(view1, viewHolder.getAdapterPosition());
+                listener.onItemClick(view1, viewHolder.getAdapterPosition(), getItem(viewHolder.getAdapterPosition()).getShortDate());
             }
         });
         return viewHolder;
@@ -49,14 +48,24 @@ public class ComplexForecastAdapter extends CursorRecyclerViewAdapter<ComplexFor
 
     @Override
     public void onBindViewHolder(ComplexForecastAdapter.ViewHolder holder, Cursor cursor) {
-        holder.weatherType.setText(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE));
-        holder.date.setText(cursor.getColumnIndex(Consts.DB_COL_DATE));
-        holder.minT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MIN_T)));
-        holder.maxT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
-        holder.humidity.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_HUMIDITY)));
-        holder.pressure.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_PRESSURE)));
-        holder.windSpeed.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_SPEED)));
-        holder.windDir.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_DEGREES)));
+        ComplexForecast item = new ComplexForecast()
+                .setHumidity(cursor.getString(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_HUMIDITY)))
+                .setPressure(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_PRESSURE)))
+                .setWindSpeed(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_SPEED)))
+                .setWindDegrees(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_DEGREES)));
+            item.setDate(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
+                    .setWeatherState(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
+                    .setMinT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
+                    .setMaxT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+
+        holder.weatherType.setText(item.getWeatherState());
+        holder.date.setText(item.getDate());
+        holder.minT.setText(item.getMaxTempToString());
+        holder.maxT.setText(item.getMaxTempToString());
+        holder.humidity.setText(item.getHumidity());
+        holder.pressure.setText(item.getPressureToString());
+        holder.windSpeed.setText(item.getWindSpeedToString());
+        holder.windDir.setText(item.getWindDegreesToString());
 
         System.out.println("Binding view holder, with ComplexForecast");
     }
@@ -70,18 +79,12 @@ public class ComplexForecastAdapter extends CursorRecyclerViewAdapter<ComplexFor
                 .setWeatherState(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
                 .setMinT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
                 .setMaxT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
-            item.setHumidity(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
-                .setPressure(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
-                .setWindSpeed(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
-                .setWindDegrees(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+            item.setHumidity(cursor.getString(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_HUMIDITY)))
+                .setPressure(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_PRESSURE)))
+                .setWindSpeed(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_SPEED)))
+                .setWindDegrees(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COMPLEX_COL_WIND_DEGREES)));
         }
-
         return item;
-    }
-
-    @Override
-    public int getItemCount() {
-        return items.size();
     }
 
     public void setListener(OnForecastClickListener listener) {

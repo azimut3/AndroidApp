@@ -45,6 +45,10 @@ public class Database {
         return mDB.query(Consts.DB_COMPLEX_TABLE_NAME, null, null,
                 null, null, null, Consts.DB_COL_ID_PRIMARY + " DESC");
     }
+    public Cursor getComplexDataByDate(String date) {
+        return mDB.query(Consts.DB_COMPLEX_TABLE_NAME, null, Consts.DB_COMPLEX_COL_SHORT_DATE+" = ?",
+                new String[]{date}, null, null, Consts.DB_COL_ID_PRIMARY + " DESC");
+    }
 
     public void clearSimpleData() {
         mDB.delete(Consts.DB_SIMPLE_TABLE_NAME, null, null);
@@ -72,6 +76,7 @@ public class Database {
         cv.put(Consts.DB_COMPLEX_COL_WIND_DEGREES, item.getMaxT());
         cv.put(Consts.DB_COMPLEX_COL_HUMIDITY, item.getMaxT());
         cv.put(Consts.DB_COMPLEX_COL_PRESSURE, item.getMaxT());
+        cv.put(Consts.DB_COMPLEX_COL_SHORT_DATE, item.getShortDate());
 
         mDB.insert(Consts.DB_COMPLEX_TABLE_NAME, null, cv);
     }

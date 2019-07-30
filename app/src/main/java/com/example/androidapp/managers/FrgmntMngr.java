@@ -1,6 +1,7 @@
 package com.example.androidapp.managers;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -34,7 +35,10 @@ public class FrgmntMngr {
     }
 
     public void toRecipientFragment(List<ComplexForecast> forecasts){
-        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).addToItems(forecasts);
+        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).updateList(forecasts);
+    }
+    public void toRecipientFragment(Cursor cursor){
+
     }
 
     public void addFragment(Fragment fragment) {

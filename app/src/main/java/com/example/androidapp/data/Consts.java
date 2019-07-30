@@ -28,6 +28,7 @@ public class Consts {
     public final static String DB_COMPLEX_COL_WIND_DEGREES = "windDegrees";
     public final static String DB_COMPLEX_COL_HUMIDITY = "humidity";
     public final static String DB_COMPLEX_COL_PRESSURE = "pressure";
+    public final static String DB_COMPLEX_COL_SHORT_DATE = "shortDate";
 
 
     // SQL Query
@@ -41,7 +42,7 @@ public class Consts {
                     " UNIQUE ( " + DB_COL_DATE + " ) ON CONFLICT IGNORE" +
                     ");";
     public static final String DB_CREATE_COMPLEX =
-            "create table " + DB_SIMPLE_TABLE_NAME + "(" +
+            "create table " + DB_COMPLEX_TABLE_NAME + "(" +
                     DB_COL_ID_PRIMARY + " integer primary key autoincrement, " +
                     DB_COL_DATE + " text, " +
                     DB_COL_WEATHER_STATE + " text, " +
@@ -51,6 +52,7 @@ public class Consts {
                     DB_COMPLEX_COL_WIND_DEGREES + " double," +
                     DB_COMPLEX_COL_HUMIDITY + " text," +
                     DB_COMPLEX_COL_PRESSURE + " double," +
+                    DB_COMPLEX_COL_SHORT_DATE + " text," +
                     " UNIQUE ( " + DB_COL_DATE + " ) ON CONFLICT IGNORE" +
                     ");";
 
@@ -58,5 +60,6 @@ public class Consts {
             "DROP TABLE IF EXISTS " + DB_SIMPLE_TABLE_NAME;
     public static final String DB_DELETE_COMPLEX_ENTRIES =
             "DROP TABLE IF EXISTS " + DB_COMPLEX_TABLE_NAME;
+
 
 }

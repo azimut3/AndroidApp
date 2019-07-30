@@ -6,6 +6,7 @@ public class ComplexForecast extends SimplifiedForecast {
     Double windDegrees;
     String humidity;
     Double pressure;
+    String ShortData;
 
     public ComplexForecast() {
     }

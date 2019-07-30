@@ -1,13 +1,13 @@
 package com.example.androidapp.fragments;
 
-import android.app.LoaderManager;
+//import android.app.LoaderManager;
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,29 +18,31 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.androidapp.R;
-import com.example.androidapp.activities.MainActivity;
 import com.example.androidapp.data.Consts;
 import com.example.androidapp.data.Database;
 import com.example.androidapp.managers.ComplexForecast;
 import com.example.androidapp.managers.ComplexForecastAdapter;
 import com.example.androidapp.managers.FrgmntMngr;
-import com.example.androidapp.managers.SimplifiedForecastAdapter;
+import com.example.androidapp.managers.SimplifiedForecast;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class FragmentResult extends Fragment  implements LoaderManager.LoaderCallbacks<Cursor> {
+public class FragmentResult extends Fragment {
     private RecyclerView recyclerView;
     private ComplexForecastAdapter adapter;
     private Context context;
     private String titlsString;
     private TextView title;
+    List<ComplexForecast> itemsToUpdate;
 
     java.util.List<ComplexForecast> forecasts = new ArrayList<>();
     private Database database;
 
 
     public FragmentResult() {
+
     }
 
 
@@ -66,20 +68,22 @@ public class FragmentResult extends Fragment  implements LoaderManager.LoaderCal
         database = new Database(this.getContext());
         database.open();
 
-        getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
+        getLoaderManager().initLoader(Consts.LOADER_ID, null, loader);
 
-        //adapter = new ComplexForecastAdapter(forecasts, this.getContext());
+        if (itemsToUpdate != null) {
+            database.clearComplexData();
+            database.addComplexData(itemsToUpdate);
+            getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
+        }
 
-        adapter = new ComplexForecastAdapter(database.getAllSimpleData(), this.getContext(), null);
+        adapter = new ComplexForecastAdapter(database.getAllComplexData(), this.getContext(), null);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recyclerView.setAdapter(adapter);
         return view;
     }
 
-    public void addToItems(Collection<ComplexForecast> elements){
-        if (forecasts.size()>0) forecasts.clear();
-        forecasts.addAll(elements);
-        if (adapter != null) adapter.notifyDataSetChanged();
+    public void updateList(List<ComplexForecast> itemsToUpdate) {
+        this.itemsToUpdate = itemsToUpdate;
     }
 
     @Override
@@ -90,20 +94,24 @@ public class FragmentResult extends Fragment  implements LoaderManager.LoaderCal
         database.close();
     }
 
-    @Override
-    public android.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this.getContext(), database);
-    }
+    LoaderManager.LoaderCallbacks<Cursor> loader = new LoaderManager.LoaderCallbacks<Cursor>() {
+        @Override
+        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+            return new MyCursorLoader(FrgmntMngr.getManager().getContext(), database);
+        }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
+        @Override
+        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+            adapter.swapCursor(data);
+        }
 
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+        @Override
+        public void onLoaderReset(Loader<Cursor> loader) {
 
-    }
+        }
+    };
+
+
 
     /**
      * Subclass of {@link android.content.CursorLoader} which provides loader associated

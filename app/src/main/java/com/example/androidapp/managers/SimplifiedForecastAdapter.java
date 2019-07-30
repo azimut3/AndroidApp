@@ -18,7 +18,6 @@ import java.util.List;
 
 public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<SimplifiedForecastAdapter.ViewHolder> {
 
-    private List<SimplifiedForecast> items;
     private OnForecastClickListener listener;
     private Context ctx;
 
@@ -40,7 +39,7 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
         ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(view1 -> {
             if (listener != null) {
-                listener.onItemClick(view1, viewHolder.getAdapterPosition());
+                listener.onItemClick(view1, viewHolder.getAdapterPosition(), getItem(viewHolder.getAdapterPosition()).getShortDate());
             }
         });
         return viewHolder;
@@ -48,13 +47,18 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
 
     @Override
     public void onBindViewHolder(SimplifiedForecastAdapter.ViewHolder holder, Cursor cursor) {
-        holder.weatherType.setText(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE));
-        holder.date.setText(cursor.getColumnIndex(Consts.DB_COL_DATE));
-        holder.minT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MIN_T)));
-        holder.maxT.setText(String.valueOf(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+        SimplifiedForecast item = new SimplifiedForecast()
+            .setDate(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_DATE)))
+            .setWeatherState(cursor.getString(cursor.getColumnIndex(Consts.DB_COL_WEATHER_STATE)))
+            .setMinT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MIN_T)))
+            .setMaxT(cursor.getDouble(cursor.getColumnIndex(Consts.DB_COL_MAX_T)));
+        //System.out.println(item);
+        holder.weatherType.setText(item.getWeatherState());
+        holder.date.setText(item.getShortDate());
+        holder.minT.setText(item.getMinTempToString());
+        holder.maxT.setText(item.getMaxTempToString());
 
-
-        System.out.println("Binding view holder, for SimpleForecast");
+        System.out.println("Binding view holder, for " + item);
     }
 
     public SimplifiedForecast getItem(int position) {
@@ -71,10 +75,6 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
         return item;
     }
 
-    @Override
-    public int getItemCount() {
-        return items.size();
-    }
 
     public void setListener(OnForecastClickListener listener) {
         this.listener = listener;
@@ -103,7 +103,4 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
         }
     }
 
-    public List<SimplifiedForecast> getItems() {
-        return items;
-    }
 }

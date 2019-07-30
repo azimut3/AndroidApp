@@ -6,6 +6,6 @@ import android.view.View;
 
 public interface OnForecastClickListener {
 
-    public void onItemClick(View v, int position);
+    public void onItemClick(View v, int position, String date);
 
 }

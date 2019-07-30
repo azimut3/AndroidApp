@@ -1,12 +1,13 @@
 package com.example.androidapp.fragments;
 
-import android.app.LoaderManager;
+
 import android.content.Context;
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,9 +72,12 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
 
         getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
 
-        adapter = new SimplifiedForecastAdapter(database.getAllSimpleData(), this.getContext(), (view, position) -> {
-            FrgmntMngr.getManager().toRecipientFragment(weatherForecastReply
-                    .getComplexForecasts(adapter.getItems().get(position).getShortDate()));
+        adapter = new SimplifiedForecastAdapter(database.getAllSimpleData(), this.getContext(), (view, position, date) -> {
+            if (weatherForecastReply != null){
+                FrgmntMngr.getManager().toRecipientFragment(weatherForecastReply.getComplexForecasts(date));
+            } else {
+                FrgmntMngr.getManager().toRecipientFragment(database.getComplexDataByDate(date));
+            }
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");
@@ -115,8 +119,8 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
 
                 weatherForecastReply = response.body();
                 updateList(weatherForecastReply.getDatesAndTemperatures());
-                System.out.println("Content of items: " + adapter.getItems());
-//                adapter.notifyDataSetChanged();
+                //System.out.println("Content of items: " + adapter.getItems());
+                //adapter.notifyDataSetChanged();
             }
 
             @Override
