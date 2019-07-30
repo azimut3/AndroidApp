@@ -130,5 +130,13 @@ public class WeatherForecastReply {
         if (complexForecasts.size()<1) setupComplexForecasts();
         return complexForecasts.get(shortDate);
     }
+    public java.util.List<ComplexForecast> getComplexForecasts() {
+        if (complexForecasts.size()<1) setupComplexForecasts();
+        java.util.List<ComplexForecast> complexForecastList = new ArrayList<>();
+        for (String listTag : complexForecasts.keySet()){
+            complexForecastList.addAll(complexForecasts.get(listTag));
+        }
+        return complexForecastList;
+    }
 
 }

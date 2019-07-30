@@ -47,7 +47,7 @@ public class Database {
     }
     public Cursor getComplexDataByDate(String date) {
         return mDB.query(Consts.DB_COMPLEX_TABLE_NAME, null, Consts.DB_COMPLEX_COL_SHORT_DATE+" = ?",
-                new String[]{date}, null, null, Consts.DB_COL_ID_PRIMARY + " DESC");
+                new String[]{date}, null, null, Consts.DB_COL_DATE + " ASC");
     }
 
     public void clearSimpleData() {

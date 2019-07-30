@@ -34,12 +34,10 @@ public class FrgmntMngr {
         fragmentsMap.put(RESULT_FRAGMENT, new FragmentResult());
     }
 
-    public void toRecipientFragment(List<ComplexForecast> forecasts){
-        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).updateList(forecasts);
+    public void toRecipientFragment(String date){
+        ((FragmentResult)fragmentsMap.get(RESULT_FRAGMENT)).updateList(date);
     }
-    public void toRecipientFragment(Cursor cursor){
 
-    }
 
     public void addFragment(Fragment fragment) {
         Log.wtf("WTF", "Add method " + MainActivity.isInLandscapeMode());

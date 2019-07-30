@@ -53,6 +53,9 @@ public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHold
     public Cursor getCursor() {
         return mCursor;
     }
+    public Cursor setCursor(Cursor cursor) {
+        return mCursor = cursor;
+    }
 
     @Override
     public int getItemCount() {

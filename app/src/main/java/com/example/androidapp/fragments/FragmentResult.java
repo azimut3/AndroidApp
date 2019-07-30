@@ -29,11 +29,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class FragmentResult extends Fragment {
+public class FragmentResult extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private RecyclerView recyclerView;
     private ComplexForecastAdapter adapter;
     private Context context;
     private String titlsString;
+    private String date;
     private TextView title;
     List<ComplexForecast> itemsToUpdate;
 
@@ -60,7 +61,7 @@ public class FragmentResult extends Fragment {
         View view = inflater.inflate(R.layout.fragment_result, container, false);
         recyclerView = view.findViewById(R.id.my_recycler_view);
         Button backBtn = view.findViewById(R.id.back_btn);
-        backBtn.setOnClickListener((e) -> FrgmntMngr.getManager()
+        if (backBtn != null) backBtn.setOnClickListener((e) -> FrgmntMngr.getManager()
                 .replaceFragment(FrgmntMngr.getManager().getElement(FrgmntMngr.INPUT_FRAGMENT)));
         title = view.findViewById(R.id.title);
         if (titlsString != null) title.setText(titlsString);
@@ -68,7 +69,7 @@ public class FragmentResult extends Fragment {
         database = new Database(this.getContext());
         database.open();
 
-        getLoaderManager().initLoader(Consts.LOADER_ID, null, loader);
+        getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
 
         if (itemsToUpdate != null) {
             database.clearComplexData();
@@ -82,8 +83,12 @@ public class FragmentResult extends Fragment {
         return view;
     }
 
-    public void updateList(List<ComplexForecast> itemsToUpdate) {
-        this.itemsToUpdate = itemsToUpdate;
+    public void updateList(String date) {
+        this.date = date;
+        if (adapter!= null) {
+            adapter.setCursor(database.getComplexDataByDate(date));
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -94,23 +99,21 @@ public class FragmentResult extends Fragment {
         database.close();
     }
 
-    LoaderManager.LoaderCallbacks<Cursor> loader = new LoaderManager.LoaderCallbacks<Cursor>() {
-        @Override
-        public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            return new MyCursorLoader(FrgmntMngr.getManager().getContext(), database);
-        }
 
-        @Override
-        public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-            adapter.swapCursor(data);
-        }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new MyCursorLoader(FrgmntMngr.getManager().getContext(), database, date);
+    }
 
-        @Override
-        public void onLoaderReset(Loader<Cursor> loader) {
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
 
-        }
-    };
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
 
 
     /**
@@ -120,14 +123,17 @@ public class FragmentResult extends Fragment {
     static class MyCursorLoader extends CursorLoader {
 
         Database db;
+        String date;
 
-        public MyCursorLoader(Context context, Database db) {
+        public MyCursorLoader(Context context, Database db, String date) {
             super(context);
             this.db = db;
+            this.date = date;
         }
 
         @Override
         public Cursor loadInBackground() {
+            if (date != null)return db.getComplexDataByDate(date);
             return db.getAllComplexData();
         }
 

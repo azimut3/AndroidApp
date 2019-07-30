@@ -23,6 +23,7 @@ import com.example.androidapp.api.RestClient;
 import com.example.androidapp.data.Consts;
 import com.example.androidapp.data.Database;
 import com.example.androidapp.data.entities.ErrorReply;
+import com.example.androidapp.managers.ComplexForecast;
 import com.example.androidapp.managers.SimplifiedForecast;
 import com.example.androidapp.data.entities.WeatherForecastReply;
 import com.example.androidapp.managers.FrgmntMngr;
@@ -73,11 +74,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
         getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
 
         adapter = new SimplifiedForecastAdapter(database.getAllSimpleData(), this.getContext(), (view, position, date) -> {
-            if (weatherForecastReply != null){
-                FrgmntMngr.getManager().toRecipientFragment(weatherForecastReply.getComplexForecasts(date));
-            } else {
-                FrgmntMngr.getManager().toRecipientFragment(database.getComplexDataByDate(date));
-            }
+            FrgmntMngr.getManager().toRecipientFragment(date);
             FrgmntMngr.getManager().replaceFragment(
                     FrgmntMngr.getManager().getElement(FrgmntMngr.RESULT_FRAGMENT));
             System.out.println("Action clicked");
@@ -118,7 +115,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
                 }
 
                 weatherForecastReply = response.body();
-                updateList(weatherForecastReply.getDatesAndTemperatures());
+                updateList(weatherForecastReply.getDatesAndTemperatures(), weatherForecastReply.getComplexForecasts());
                 //System.out.println("Content of items: " + adapter.getItems());
                 //adapter.notifyDataSetChanged();
             }
@@ -131,9 +128,11 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
         });
     }
 
-    private void updateList(List<SimplifiedForecast> itemsToUpdate) {
+    private void updateList(List<SimplifiedForecast> simpleItems, List<ComplexForecast> complexItems) {
         database.clearSimpleData();
-        database.addSimpleData(itemsToUpdate);
+        database.addSimpleData(simpleItems);
+        database.clearComplexData();
+        database.addComplexData(complexItems);
         getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
     }
 
