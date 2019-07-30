@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -47,6 +48,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
     private SimplifiedForecastAdapter adapter;
     private List<SimplifiedForecast> items = new ArrayList<>();
     private WeatherForecastReply weatherForecastReply;
+    TextView forecastLbl;
 
     public FragmentInput() {
 
@@ -63,6 +65,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
 
         View viewFragment = inflater.inflate(R.layout.fragment_input, container, false);
         recyclerView = viewFragment.findViewById(R.id.my_recycler_view);
+
         Button getForecastBtn = viewFragment.findViewById(R.id.get_forecast_btn);
 
         getLoaderManager().initLoader(Consts.LOADER_ID, null, this);
@@ -79,6 +82,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
         getForecastBtn.setOnClickListener(view -> {
             loadForecast("Odessa");
         });
+        forecastLbl = viewFragment.findViewById(R.id.forecastLbl);
 
         return viewFragment;
     }
@@ -128,6 +132,7 @@ public class FragmentInput extends Fragment implements LoaderManager.LoaderCallb
         getDatabase().clearComplexData();
         getDatabase().addComplexData(complexItems);
         getLoaderManager().getLoader(Consts.LOADER_ID).forceLoad();
+
     }
 
     @Override

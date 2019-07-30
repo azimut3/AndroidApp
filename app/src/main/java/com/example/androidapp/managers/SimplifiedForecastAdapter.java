@@ -20,6 +20,7 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
 
     private OnForecastClickListener listener;
     private Context ctx;
+    public boolean empty = true;
 
     public SimplifiedForecastAdapter(Cursor cursor, Context ctx) {
         super(ctx, cursor);
@@ -57,7 +58,7 @@ public class SimplifiedForecastAdapter  extends CursorRecyclerViewAdapter<Simpli
         holder.date.setText(item.getShortDate());
         holder.minT.setText(item.getMinTempToString());
         holder.maxT.setText(item.getMaxTempToString());
-
+        if (empty) empty = false;
         System.out.println("Binding view holder, for " + item);
     }
 
